@@ -1,40 +1,59 @@
 import { Typography, TextField, Box, FormControl, InputLabel, Select, MenuItem, Button, Container, FormLabel, FormGroup, FormControlLabel, Checkbox } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import axios from "axios"
+import { useNavigate } from "react-router-dom";
 
 const Editar = () => {
 
     let {id} = useParams()
-    let id_prof = id;
-
-    const professores = [
-        { id: 0, nome: "Camila Belmont", curso: "SI", titulo: "MEST", ai: {es: true, al: false, ds: true, mc: false} },
-        { id: 1, nome: "Vitin do Iôiô", curso: "SI", titulo: "DOUT", ai: {es: false, al: false, ds: false, mc: false}},
-        { id: 2, nome: "Abner Gripe", curso: "SI", titulo: "GRAD", ai: {es: false, al: false, ds: false, mc: false} },
-        { id: 3, nome: "Geovane", curso: "ES", titulo: "GRAD", ai: {es: false, al: false, ds: false, mc: false} },
-        { id: 4, nome: "Vito Corleone", curso: "EC", titulo: "DOUT", ai: {es: false, al: false, ds: false, mc: false} }
-    ]
-
-    const getProfessorById = (id) => {
-        for (let i = 0; i< professores.length; i++){
-            if (professores[i].id == id){
-                return professores[i];
-            }
-        }
-        return null;
-    }
+    let navigate = useNavigate()
 
     const [nome, setNome] = useState("");
     const [curso, setCurso] = useState("");
     const [titulo, setTitulo] = useState("");
     const [ai, setAi] = useState({es: false, al: false, ds: false, mc: false})
 
+    useEffect(
+        () => {
+            axios.get(`http://localhost:3001/professor/recuperar/${id}`)
+            .then(
+                (res) => {
+                    setNome(res.data.nome)
+                    setCurso(res.data.curso)
+                    setTitulo(res.data.titulo)
+                    setAi(res.data.ai)
+                }
+            )
+            .catch((err)=>console.log(err))
+        },
+        []
+    )
+
+    // const getProfessorById = (id) => {
+    //     for (let i = 0; i< professores.length; i++){
+    //         if (professor[i].id == id){
+    //             return professores[i];
+    //         }
+    //     }
+    //     return null;
+    // }
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(nome);
-        console.log(curso);
-        console.log(titulo);
-        console.log(ai)
+
+        const professorAtualizado = {nome, curso, titulo, ai};
+
+        axios.put(
+            `http://localhost:3001/professor/atualizar/${id}`,
+            professorAtualizado
+        )
+        .then((res)=>{
+            alert("Professor ID " + id + " atualizado!")
+            navigate("/listarProfessor")
+        })
+        .catch((err)=>console.log(err))
+        
     }
 
     const handleCheckbox = (event) => {
@@ -43,17 +62,6 @@ const Editar = () => {
             [event.target.name]:event.target.checked
         })
     }
-
-
-    useEffect(
-        () => {
-            setNome(getProfessorById(id_prof).nome);
-            setCurso(getProfessorById(id_prof).curso);
-            setTitulo(getProfessorById(id_prof).titulo);
-            setAi(getProfessorById(id_prof).ai);
-        }, 
-        []
-    )
 
     return (
         <Container

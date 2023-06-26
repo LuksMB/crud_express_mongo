@@ -1,10 +1,12 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import { Delete, Edit, WindowTwoTone } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import { styled } from '@mui/material/styles';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Listar = () => {
 
@@ -17,6 +19,20 @@ const Listar = () => {
     // ]
 
     const [professores, setProfessores] = useState([])
+    const navigate = useNavigate()
+
+    useEffect(
+        () => {
+            axios.get("http://localhost:3001/professor/listar")
+            .then(
+                (res) => {
+                    setProfessores(res.data)
+                }
+            )
+            .catch((err)=>console.log(err))
+        },
+        []
+    )
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
@@ -40,7 +56,15 @@ const Listar = () => {
 
     const deleteProfessor = (id) => {
         if(window.confirm("Deseja mesmo apagar esse(a) professor(a) do banco de dados?")){
-            alert("Professor(a) " + professores[id].nome + " apagado(a) com sucesso!")
+            axios.delete(
+                `http://localhost:3001/professor/deletar/${id}`
+            )
+            .then((res)=>{
+                const profs = professores.filter((prof)=>prof.id != id)
+                setProfessores(profs)
+                alert("Professor(a) apagado(a)!")
+            })
+            .catch((err)=>console.log(err))
         }
     }
 

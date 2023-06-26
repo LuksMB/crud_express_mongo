@@ -1,5 +1,7 @@
 import { Typography, TextField, Box, FormControl, InputLabel, Select, MenuItem, Button, Container, FormLabel, FormGroup, FormControlLabel, Checkbox } from "@mui/material"
 import { useState } from "react"
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Cadastrar = () => {
 
@@ -8,13 +10,21 @@ const Cadastrar = () => {
     const [titulo, setTitulo] = useState("GRAD");
     const [ai, setAi] = useState({es: false, al: false, ds: false, mc: false})
 
+    const navigate = useNavigate()
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(nome);
-        console.log(curso);
-        console.log(titulo);
-        console.log(ai)
+        const novoProfessor = {nome, curso, titulo, ai}
+        axios.post(
+            "http://localhost:3001/professor/registrar",
+            novoProfessor
+        )
+        .then((res)=>{
+            alert("Professor ID " + res.data.id + " adicionado!")
+            navigate("/listarProfessor")
+        })
+        .catch((err)=>console.log(err))
     }
 
     const handleCheckbox = (event) => {
