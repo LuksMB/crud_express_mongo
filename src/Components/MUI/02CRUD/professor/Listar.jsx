@@ -10,14 +10,6 @@ import { useNavigate } from "react-router-dom";
 
 const Listar = () => {
 
-    // const professores = [
-    //     { id: 0, nome: "Camila Belmont", curso: "SI", titulo: "MEST" },
-    //     { id: 1, nome: "Vitin do Iôiô", curso: "SI", titulo: "DOUT" },
-    //     { id: 2, nome: "Abner Gripe", curso: "SI", titulo: "GRAD" },
-    //     { id: 3, nome: "Geovane", curso: "ES", titulo: "GRAD" },
-    //     { id: 4, nome: "Vito Corleone", curso: "EC", titulo: "DOUT" }
-    // ]
-
     const [professores, setProfessores] = useState([])
     const navigate = useNavigate()
 
@@ -60,7 +52,7 @@ const Listar = () => {
                 `http://localhost:3001/professor/deletar/${id}`
             )
             .then((res)=>{
-                const profs = professores.filter((prof)=>prof.id != id)
+                const profs = professores.filter((prof)=>prof._id != id)
                 setProfessores(profs)
                 alert("Professor(a) apagado(a)!")
             })
@@ -106,19 +98,19 @@ const Listar = () => {
                             professores.map(
                                 (prof) => {
                                     return (
-                                        <StyledTableRow key={prof.id}>
-                                            <StyledTableCell>{prof.id}</StyledTableCell>
+                                        <StyledTableRow key={prof._id}>
+                                            <StyledTableCell>{prof._id}</StyledTableCell>
                                             <StyledTableCell>{prof.nome}</StyledTableCell>
                                             <StyledTableCell>{prof.curso}</StyledTableCell>
                                             <StyledTableCell>{prof.titulo}</StyledTableCell>
                                             <StyledTableCell>
                                                 <Box>
-                                                    <IconButton aria-label="edit" color="primary" component={Link} to={`/editarProfessor/${prof.id}`}>
+                                                    <IconButton aria-label="edit" color="primary" component={Link} to={`/editarProfessor/${prof._id}`}>
                                                         <Edit />
                                                     </IconButton>
                                                     <IconButton aria-label="delete" color="error" onClick={
                                                         () => {
-                                                            deleteProfessor(prof.id);
+                                                            deleteProfessor(prof._id);
                                                         }
                                                     }>
                                                         <Delete />

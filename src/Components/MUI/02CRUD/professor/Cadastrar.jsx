@@ -21,7 +21,7 @@ const Cadastrar = () => {
             novoProfessor
         )
         .then((res)=>{
-            alert("Professor ID " + res.data.id + " adicionado!")
+            alert("Professor ID " + res.data._id + " adicionado!")
             navigate("/listarProfessor")
         })
         .catch((err)=>console.log(err))
