@@ -103,6 +103,7 @@ const Editar = () => {
                         maxLength: 10,
                         step: "0.1"
                     }}
+                    value={ira}
                     onChange={(event) => {
                         setIra(parseFloat(event.target.value));
                     }}

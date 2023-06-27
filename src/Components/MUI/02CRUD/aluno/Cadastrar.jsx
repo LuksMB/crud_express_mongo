@@ -1,4 +1,4 @@
-import { Typography, TextField, Box, Button, Container } from "@mui/material"
+import { Typography, TextField, Box, Button, Container, MenuItem, InputLabel, FormControl, Select } from "@mui/material"
 import { useState } from "react"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -6,24 +6,27 @@ import { useNavigate } from "react-router-dom";
 const Cadastrar = () => {
 
     const [nome, setNome] = useState("");
-    const [curso, setCurso] = useState("");
+
+    //Curso criado da mesma forma que antes, só tendo o valor alterado posteriormente
+    const [curso, setCurso] = useState("SI")
     const [ira, setIra] = useState("0.0");
 
     const navigate = useNavigate()
 
 
+    //HandleSubmit funcionando da mesma maneira, pois o curso é alterado individualmente pelo FormControl
     const handleSubmit = (event) => {
         event.preventDefault();
-        const novoAluno = {nome, curso, ira}
+        const novoAluno = { nome, curso, ira }
         axios.post(
             "http://localhost:3001/aluno/registrar",
             novoAluno
         )
-        .then((res)=>{
-            alert("Aluno ID " + res.data._id + " adicionado!")
-            navigate("/listarAluno")
-        })
-        .catch((err)=>console.log(err))
+            .then((res) => {
+                alert("Aluno ID " + res.data._id + " adicionado!")
+                navigate("/listarAluno")
+            })
+            .catch((err) => console.log(err))
     }
 
     return (
@@ -58,17 +61,34 @@ const Cadastrar = () => {
                     }}
                 />
 
-                <TextField
-                    margin="normal"
-                    required
+                <FormControl
                     fullWidth
-                    id="curso"
-                    name="curso"
-                    label="Curso"
-                    onChange={(event) => {
-                        setCurso(event.target.value);
+                    sx={{
+                        mt: 2
                     }}
-                />
+
+                >
+                    {/* Select feito com FormControl e InputLabel, onde as opções já são mostradas pelos MenuItems e ainda enviadas para o post por meio do setCurso no onChange do Select */}
+                    <InputLabel id="select-curso-label">
+                        Curso
+                    </InputLabel>
+                    <Select
+                        labelId="select-curso-label"
+                        label="Curso"
+                        value={curso}
+                        onChange={(event) => {
+                            setCurso(event.target.value)
+                        }}
+                    >
+                        <MenuItem value="CC">CC</MenuItem>
+                        <MenuItem value="SI">SI</MenuItem>
+                        <MenuItem value="DD">DD</MenuItem>
+                        <MenuItem value="ES">ES</MenuItem>
+                        <MenuItem value="EC">EC</MenuItem>
+                        <MenuItem value="RC">RC</MenuItem>
+
+                    </Select>
+                </FormControl>
 
                 <TextField
                     margin="normal"

@@ -110,6 +110,17 @@ const MyMenu = () => {
                 >
                     Listar
                 </MenuItem>
+                <MenuItem
+                    onClick={
+                        () => {
+                            handleCloseAnchorElAluno()
+                        }
+                    }
+                    component={Link}
+                    to={"listarAprovados"}
+                >
+                    Aprovados
+                </MenuItem>
 
             </Menu>
 
